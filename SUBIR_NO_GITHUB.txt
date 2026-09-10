@@ -1,0 +1,23 @@
+SUBIR NO GITHUB — PASSO A PASSO
+
+1. Extraia este ZIP.
+2. Abra a pasta Projeto_Futuro_GITHUB_FINAL.
+3. Entre no seu repositório:
+   Rapha0904/projeto-futuro-9ano
+4. Substitua o index.html atual pelo novo index.html.
+5. Abra a pasta admin e substitua o index.html de dentro dela.
+6. A pasta firebase contém as regras atualizadas apenas para referência/publicação no Firebase.
+7. Faça Commit changes.
+8. Aguarde o GitHub Pages atualizar.
+
+Depois abra:
+https://rapha0904.github.io/projeto-futuro-9ano/
+
+Painel:
+https://rapha0904.github.io/projeto-futuro-9ano/admin/
+
+NO FIREBASE:
+Firestore → Regras → cole o conteúdo de firebase/firestore.rules → Publicar.
+
+Não é necessário criar documentos manualmente.
+A primeira turma pode ser criada pelo próprio painel administrativo.
