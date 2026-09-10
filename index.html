@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Seu Caminho</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#06111f;--bg2:#0a1d31;--line:rgba(190,225,255,.18);--text:#f5f9ff;--muted:#a9bfd4;--cyan:#8fe6ff}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:"DM Sans";color:var(--text);background:radial-gradient(circle at 20% 10%,#12395a 0,transparent 34%),radial-gradient(circle at 85% 80%,#0b3550 0,transparent 32%),linear-gradient(145deg,var(--bg),var(--bg2))}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.23;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:44px 44px}
+.app{height:100vh;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;overflow:hidden}.shell{width:min(1180px,100%);height:min(94vh,720px);display:flex;flex-direction:column}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.brand{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#d9efff;font-weight:700}.step{font-size:13px;color:var(--muted)}
+.card{height:100%;min-height:0;flex:1;border:1px solid var(--line);background:linear-gradient(145deg,rgba(255,255,255,.105),rgba(255,255,255,.035));box-shadow:0 30px 80px rgba(0,0,0,.28),inset 0 1px rgba(255,255,255,.08);backdrop-filter:blur(22px);border-radius:30px;padding:clamp(28px,6vw,72px);display:flex;flex-direction:column;justify-content:center;overflow:hidden;position:relative}.card:after{content:"";position:absolute;width:420px;height:420px;border-radius:50%;background:rgba(94,205,239,.08);filter:blur(50px);right:-190px;bottom:-220px;pointer-events:none}
+.eyebrow{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--cyan);font-weight:800;margin-bottom:16px}h1{font:800 clamp(34px,5vw,66px)/1.02 Manrope;margin:0 0 18px;max-width:850px;letter-spacing:-.04em}.lead{font-size:clamp(16px,2vw,21px);line-height:1.55;color:var(--muted);max-width:760px;margin:0 0 30px}
+select{width:100%;max-width:600px;padding:17px 18px;border-radius:16px;border:1px solid var(--line);background:rgba(5,18,31,.7);color:white;font:inherit;outline:none}.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}.btn{border:0;border-radius:15px;padding:15px 22px;font:700 15px "DM Sans";cursor:pointer;background:linear-gradient(135deg,#b7efff,#62cdec);color:#062033;box-shadow:0 10px 28px rgba(82,201,237,.18)}.btn:disabled{opacity:.45;cursor:not-allowed}.btn.secondary{background:rgba(255,255,255,.07);border:1px solid var(--line);color:white;box-shadow:none}
+.question{font:800 clamp(25px,3.2vw,43px)/1.13 Manrope;max-width:850px;margin:0 0 28px;letter-spacing:-.025em}.answers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;max-width:850px}.answer{padding:19px;border:1px solid var(--line);background:rgba(255,255,255,.045);color:white;border-radius:17px;text-align:left;font:600 16px "DM Sans";cursor:pointer;transition:.18s}.answer:hover{transform:translateY(-2px);border-color:rgba(143,230,255,.55);background:rgba(143,230,255,.09)}.progress{height:5px;background:rgba(255,255,255,.08);border-radius:20px;margin-bottom:30px;overflow:hidden}.bar{height:100%;background:linear-gradient(90deg,#b7efff,#54c9ed);transition:.3s}
+.result-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:18px;max-width:900px}.result-box{padding:25px;border-radius:20px;border:1px solid var(--line);background:rgba(255,255,255,.055)}.result-name{font:800 30px Manrope;margin:4px 0 10px}.percent{font:46px Manrope}.meter{height:9px;background:rgba(255,255,255,.08);border-radius:10px;margin:13px 0 18px;overflow:hidden}.meter span{display:block;height:100%;background:linear-gradient(90deg,#b7efff,#54c9ed);border-radius:10px}.small{font-size:14px;line-height:1.55;color:var(--muted)}.status{margin-top:18px;font-size:13px;color:var(--muted)}.footer{margin-top:16px;text-align:center;color:#7891a7;font-size:12px}.hidden{display:none!important}.lock{padding:18px 20px;border:1px solid rgba(143,230,255,.2);background:rgba(143,230,255,.07);border-radius:17px;max-width:780px;color:var(--muted);line-height:1.6}
+@media(max-width:700px){.app{height:auto;min-height:100vh;padding:14px;overflow:auto}.shell{height:auto;min-height:calc(100vh - 28px)}.card{padding:28px 22px;border-radius:24px}.answers,.result-grid{grid-template-columns:1fr}h1{font-size:38px}.actions .btn{width:100%}}
+</style></head>
+<body><div class="app"><main class="shell">
+<div class="top"><div class="brand">UMA EXPERIÊNCIA SOBRE ESCOLHAS</div><div class="step" id="step"></div></div>
+<section class="card" id="screen"></section>
+<div class="footer">Seu resultado é um ponto de partida — não uma sentença sobre o seu futuro.</div>
+</main></div>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
+import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
+import { getFirestore, collection, getDocs, addDoc, serverTimestamp, query, where, doc, getDoc, writeBatch } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
+
+const firebaseConfig={apiKey:"AIzaSyApyhdVaJGwMk7QV5CbS6OwYc9b6Lkbsu0",authDomain:"caminhos-yvone-palestra.firebaseapp.com",databaseURL:"https://caminhos-yvone-palestra-default-rtdb.firebaseio.com",projectId:"caminhos-yvone-palestra",storageBucket:"caminhos-yvone-palestra.firebasestorage.app",messagingSenderId:"767028551876",appId:"1:767028551876:web:50794791450867fa3ce991",measurementId:"G-N9BFS24NHP"};
+const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app);
+const screen=document.getElementById("screen"),step=document.getElementById("step");
+let turmaId="",turmaNome="",current=0,answers=[],uid=null,alreadyDone=false;
+
+const questions=[
+["Quando aparece um problema difícil, o que mais combina com você?",["Entender como funciona e encontrar uma solução lógica.","Conversar com as pessoas envolvidas e organizar o que precisa ser feito.","Pensar em uma solução diferente das que já existem.","Tomar a frente e decidir por onde começar."]],
+["Qual dessas atividades parece mais interessante?",["Criar ou mexer em sites, aplicativos ou sistemas.","Organizar uma equipe, tarefa ou projeto.","Testar uma ideia usando tecnologia.","Planejar como fazer algo funcionar melhor."]],
+["Você recebe uma planilha cheia de informações. O que tende a fazer?",["Procurar padrões, erros e informações importantes.","Organizar tudo para facilitar o trabalho de outras pessoas.","Pensar em uma forma tecnológica de transformar aqueles dados.","Usar as informações para ajudar a tomar uma decisão."]],
+["Em um trabalho em grupo, qual papel costuma combinar mais com você?",["Resolver a parte mais técnica ou lógica.","Organizar as tarefas e os prazos.","Criar a ideia ou uma solução diferente.","Coordenar o grupo para chegar ao resultado."]],
+["O que mais desperta sua curiosidade?",["Como aplicativos, sites e sistemas funcionam por trás.","Como empresas e equipes conseguem funcionar bem.","Como usar tecnologia para criar algo novo.","Como uma ideia pode virar um projeto de verdade."]],
+["Se você pudesse melhorar uma coisa na escola, qual seria?",["Criaria um sistema ou aplicativo para resolver o problema.","Mudaria a organização dos processos e atividades.","Criaria uma solução digital diferente e criativa.","Montaria um plano para envolver alunos e escola."]],
+["Quando precisa aprender algo novo, você prefere...",["Testar, explorar e descobrir como funciona.","Entender o passo a passo e colocar em prática.","Experimentar possibilidades até encontrar uma solução.","Aprender pensando em como aquilo pode ser útil."]],
+["Qual situação parece mais com você?",["Fico curioso quando vejo uma tecnologia nova.","Gosto quando consigo colocar ordem nas coisas.","Gosto de criar e experimentar ideias.","Gosto de planejar, negociar e fazer acontecer."]],
+["Imagine que você recebeu uma ideia para um projeto. Qual é seu primeiro impulso?",["Pensar em como transformar a ideia em um sistema ou ferramenta.","Definir tarefas, pessoas e prazos.","Imaginar como deixar a ideia mais interessante.","Pensar em como fazer o projeto funcionar na prática."]],
+["Qual destas habilidades você gostaria mais de desenvolver?",["Programação, tecnologia e sistemas.","Liderança, organização e gestão.","Dados, ferramentas digitais e criação.","Comunicação, negociação e tomada de decisão."]],
+["Quando algo não dá certo, você costuma...",["Investigar o que aconteceu e tentar corrigir.","Reorganizar o processo e tentar novamente.","Testar outra ideia ou abordagem.","Pensar em uma alternativa para alcançar o objetivo."]],
+["Pensando no Ensino Médio, o que você gostaria de experimentar mais?",["Tecnologia, programação e desenvolvimento.","Administração, organização e negócios.","Criar soluções digitais e aprender fazendo.","Projetos, gestão e desafios práticos."]]
+];
+
+async function start(){
+ step.textContent="";
+ screen.innerHTML=`<div class="eyebrow">UMA EXPERIÊNCIA PARA O 9º ANO</div><h1>E se o seu caminho combinasse com você?</h1>
+ <p class="lead">Você não precisa decidir o seu futuro agora. Primeiro, descubra quais habilidades e formas de pensar aparecem mais no seu jeito de agir.</p>
+ <label class="small">Qual é a sua turma?</label><br><br><select id="turma"><option>Conectando...</option></select>
+ <div class="actions"><button class="btn" id="begin" disabled>Começar</button></div><div class="status" id="status">Preparando sua experiência...</div>`;
+ try{
+  await signInAnonymously(auth);uid=auth.currentUser.uid;
+  const existing=await getDoc(doc(db,"resultados",uid));
+  if(existing.exists()){alreadyDone=true;showAlreadyDone(existing.data());return}
+  const snap=await getDocs(query(collection(db,"turmas"),where("ativa","==",true)));
+  const sel=document.getElementById("turma"),status=document.getElementById("status"),btn=document.getElementById("begin");
+  sel.innerHTML=`<option value="">Escolha sua turma...</option>`;
+  snap.forEach(d=>{const x=d.data();const o=document.createElement("option");o.value=d.id;o.textContent=x.nome;sel.appendChild(o)});
+  if(sel.options.length===1){sel.innerHTML=`<option value="">Nenhuma turma disponível</option>`;status.textContent="As turmas ainda não foram disponibilizadas.";return}
+  status.textContent="Pronto. Escolha sua turma para começar.";btn.disabled=false;sel.onchange=()=>btn.disabled=!sel.value;
+  btn.onclick=()=>{const o=sel.options[sel.selectedIndex];turmaId=sel.value;turmaNome=o.textContent;current=0;answers=[];renderQuestion()};
+ }catch(e){console.error(e);document.getElementById("status").textContent="Não foi possível conectar à experiência. Tente novamente."}
+}
+function showAlreadyDone(data){
+ step.textContent="CONCLUÍDO";
+ const ap=data.adsPercent??0,mp=data.admPercent??0;
+ screen.innerHTML=`<div class="eyebrow">VOCÊ JÁ PARTICIPOU</div><h1>Seu resultado já foi registrado.</h1>
+ <p class="lead">Para preservar a experiência e a qualidade dos dados, este teste pode ser respondido apenas uma vez neste dispositivo.</p>
+ <div class="result-grid"><div class="result-box"><div class="small">TECNOLOGIA & ADS</div><div class="percent">${ap}%</div><div class="meter"><span style="width:${ap}%"></span></div></div>
+ <div class="result-box"><div class="small">ADMINISTRAÇÃO</div><div class="percent">${mp}%</div><div class="meter"><span style="width:${mp}%"></span></div></div></div>
+ <div class="lock">Seu resultado foi salvo automaticamente. Não é necessário responder novamente.</div>`;
+}
+function renderQuestion(){
+ const [q,opts]=questions[current];step.textContent=`${current+1} / ${questions.length}`;
+ screen.innerHTML=`<div class="progress"><div class="bar" style="width:${(current/questions.length)*100}%"></div></div><div class="eyebrow">PERGUNTA ${current+1}</div><h2 class="question">${q}</h2><div class="answers">${opts.map((x,i)=>`<button class="answer" data-i="${i}">${x}</button>`).join("")}</div>`;
+ document.querySelectorAll(".answer").forEach(b=>b.onclick=()=>choose(+b.dataset.i));
+}
+function choose(i){answers[current]=i;current++;current<questions.length?renderQuestion():saveAndShowResult()}
+async function saveAndShowResult(){
+ if(alreadyDone){return}
+ const adsCount=answers.filter(x=>x===0||x===2).length,admCount=answers.length-adsCount,total=answers.length,ap=Math.round(adsCount/total*100),mp=100-ap;
+ const resultData={turmaId,turmaNome,uid,ads:adsCount,adm:admCount,adsPercent:ap,admPercent:mp,createdAt:serverTimestamp()};
+ screen.innerHTML=`<div class="eyebrow">CALCULANDO</div><h1>Seu resultado está sendo preparado...</h1><p class="lead">Salvando sua participação com segurança.</p><div class="status">Não feche esta página.</div>`;
+ try{
+  const batch=writeBatch(db);
+  batch.set(doc(db,"respostas",uid),{turmaId,turmaNome,uid,answers,createdAt:serverTimestamp()});
+  batch.set(doc(db,"resultados",uid),resultData);
+  await batch.commit();
+  alreadyDone=true;showResult({adsPercent:ap,admPercent:mp,turmaNome});
+ }catch(e){
+  console.error(e);
+  screen.innerHTML=`<div class="eyebrow">NÃO FOI POSSÍVEL SALVAR</div><h1>Houve um problema ao registrar sua participação.</h1><p class="lead">Não tente responder novamente. Peça ao responsável pela experiência para verificar o sistema.</p><div class="status">Erro de gravação.</div>`;
+ }
+}
+function showResult(data){
+ const ap=data.adsPercent,mp=data.admPercent;
+ let title,desc;
+ if(Math.abs(ap-mp)<=10){title="Seu resultado ficou equilibrado";desc="Você apresentou características que combinam com os dois caminhos. Vale a pena conhecer tanto Tecnologia/ADS quanto Administração."; }
+ else if(ap>mp){title="Seu caminho tem mais afinidade com Tecnologia & ADS";desc="Seu jeito de responder mostrou proximidade com lógica, tecnologia, sistemas, resolução de problemas e criação de soluções."; }
+ else {title="Seu caminho tem mais afinidade com Administração";desc="Seu jeito de responder mostrou proximidade com organização, planejamento, comunicação, gestão e tomada de decisões."; }
+ step.textContent="RESULTADO";
+ screen.innerHTML=`<div class="eyebrow">SEU RESULTADO · ${data.turmaNome||turmaNome}</div><h1>${title}</h1><p class="lead">${desc}</p>
+ <div class="result-grid"><div class="result-box"><div class="small">TECNOLOGIA & ADS</div><div class="percent">${ap}%</div><div class="meter"><span style="width:${ap}%"></span></div><div class="small">Lógica · Sistemas · Tecnologia · Dados · Solução de problemas</div></div>
+ <div class="result-box"><div class="small">ADMINISTRAÇÃO</div><div class="percent">${mp}%</div><div class="meter"><span style="width:${mp}%"></span></div><div class="small">Organização · Gestão · Comunicação · Planejamento · Decisão</div></div></div>
+ <div class="lock">✓ Participação registrada automaticamente. Este teste não pode ser repetido neste dispositivo.</div>`;
+}
+start();
+</script></body></html>
